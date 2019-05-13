@@ -1,5 +1,7 @@
 import pickle
 import os.path
+import requests
+import todoist
 from datetime import datetime, timedelta
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -60,5 +62,37 @@ def getcurrentevent(calendar_name):
     return events[0]
 
 
+def getfirsttask():
+    with open('todoist.key', 'r') as keyfile:
+        key = keyfile.read()
+
+    api = todoist.TodoistAPI(key)
+    api.sync()
+
+    print(api.state['filters'][4])
+
+    f = api.state['filters'][4]
+    print(f['name'])
+
+    x = requests.get(
+        "https://beta.todoist.com/API/v8/tasks",
+        params={
+            "filter": f['query']
+        },
+        headers={
+            "Authorization": f"Bearer {key}"
+        }).json()
+
+    print(len(x))
+    for y in x:
+        print(y)
+
+
+    # params = {'token': key, 'filter': f['name']}
+    # obj = api._get('tasks', params=params)
+    # print(obj)
+
 if __name__ == '__main__':
-    getcurrentevent('Day-planning')
+    # getcurrentevent('Day-planning')
+
+    getfirsttask()
