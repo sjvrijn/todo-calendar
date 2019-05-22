@@ -62,19 +62,15 @@ def getcurrentevent(calendar_name):
     return events[0]
 
 
-def getfirsttask():
+def getfirsttask(filter_name):
     with open('todoist.key', 'r') as keyfile:
         key = keyfile.read()
 
     api = todoist.TodoistAPI(key)
     api.sync()
+    f = [f for f in api.state['filters'] if f['name'] == filter_name][0]
 
-    print(api.state['filters'][4])
-
-    f = api.state['filters'][4]
-    print(f['name'])
-
-    x = requests.get(
+    tasks = requests.get(
         "https://beta.todoist.com/API/v8/tasks",
         params={
             "filter": f['query']
@@ -83,16 +79,13 @@ def getfirsttask():
             "Authorization": f"Bearer {key}"
         }).json()
 
-    print(len(x))
-    for y in x:
-        print(y)
+    return tasks[0]
 
-
-    # params = {'token': key, 'filter': f['name']}
-    # obj = api._get('tasks', params=params)
-    # print(obj)
 
 if __name__ == '__main__':
     # getcurrentevent('Day-planning')
 
-    getfirsttask()
+    task = getfirsttask(filter_name='Desk-Widget')
+    print(task)
+    print()
+    print(task['content'])
