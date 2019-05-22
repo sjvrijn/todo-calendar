@@ -76,7 +76,7 @@ def getfirsttask(filter_name):
             "filter": f['query']
         },
         headers={
-            "Authorization": f"Bearer {key}"
+            "Authorization": "Bearer {key}".format(key=key)
         }).json()
 
     return tasks[0]

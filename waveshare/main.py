@@ -89,8 +89,8 @@ def run_demo():
         epd.sleep()
 
     except:
-        print(f'traceback.format_exc():\n'
-              f'{traceback.format_exc()}')
+        print('traceback.format_exc():\n'
+              '{}'.format(traceback.format_exc()))
         exit()
 
 
