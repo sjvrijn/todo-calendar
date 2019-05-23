@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
+from waveshare.EPaper import EPaper
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
@@ -89,3 +90,6 @@ if __name__ == '__main__':
     print(task)
     print()
     print(task['content'])
+
+    ep = EPaper()
+    ep.show_text(task['content'])
