@@ -95,6 +95,7 @@ PROGRAM_MODE                                = 0xA0
 ACTIVE_PROGRAM                              = 0xA1
 READ_OTP_DATA                               = 0xA2
 
+
 class EPD:
     def __init__(self):
         self.reset_pin = epdconfig.RST_PIN
