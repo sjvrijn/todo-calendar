@@ -6,13 +6,14 @@ class EPaper:
 
     font_file = '/usr/share/fonts/truetype/wqy/wqy-microhei.ttc'
     font_sizes = [10, 12, 14, 16, 18, 24]
-    fonts = {
-        size: ImageFont.truetype(font_file, size)
-        for size in font_sizes
-    }
 
 
     def __init__(self):
+        self.fonts = {
+            size: ImageFont.truetype(self.font_file, size)
+            for size in self.font_sizes
+        }
+
         self.interface = EPD()
         self.interface.init()
         self.interface.Clear(0xFF)
