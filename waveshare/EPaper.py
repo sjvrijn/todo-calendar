@@ -1,6 +1,7 @@
 from waveshare.epd2in7b import EPD, EPD_HEIGHT, EPD_WIDTH
 from PIL import Image, ImageDraw, ImageFont
 import textwrap
+import time
 
 
 def get_ip():
@@ -35,19 +36,20 @@ class EPaper:
         pass
 
 
-    def show_text(self, text, location=(10,0), size=18):
+    def show_text(self, text, location=(0,0), size=18):
         HBlackimage = Image.new('1', (EPD_HEIGHT, EPD_WIDTH), 255)  # 264*176
         HRedimage = Image.new('1', (EPD_HEIGHT, EPD_WIDTH), 255)  # 264*176
         drawblack = ImageDraw.Draw(HBlackimage)
 
-        wrapped_text = textwrap.wrap(text, width=30)
+        wrapped_text = textwrap.wrap(text, width=25)
         x, y = location
 
         for i, line in enumerate(wrapped_text):
             line_y = y + (size + 2)*i
             drawblack.text((x, line_y), line, font=self.fonts[size], fill=0)
 
-        drawblack.text((10, 140), get_ip(), font=self.fonts[size], fill=0)
+        drawblack.text((0, 140), get_ip(), font=self.fonts[12], fill=0)
+        drawblack.text((0, 155), "Updated: {}".format(time.strftime("%H:%M:%S")), font=self.fonts[12], fill=0)
 
         self.interface.display(self.interface.getbuffer(HBlackimage), self.interface.getbuffer(HRedimage))
         self.interface.sleep()
