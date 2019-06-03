@@ -3,6 +3,15 @@ from PIL import Image, ImageDraw, ImageFont
 import textwrap
 
 
+def get_ip():
+    import socket
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    ip = s.getsockname()[0]
+    s.close()
+    return ip
+
+
 class EPaper:
 
     font_file = '/usr/share/fonts/truetype/wqy/wqy-microhei.ttc'
@@ -37,6 +46,8 @@ class EPaper:
         for i, line in enumerate(wrapped_text):
             line_y = y + (size + 2)*i
             drawblack.text((x, line_y), line, font=self.fonts[size], fill=0)
+
+        drawblack.text((10, 140), get_ip(), font=self.fonts[size], fill=0)
 
         self.interface.display(self.interface.getbuffer(HBlackimage), self.interface.getbuffer(HRedimage))
         self.interface.sleep()
