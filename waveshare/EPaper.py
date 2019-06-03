@@ -8,15 +8,17 @@ class EPaper:
     font_sizes = [10, 12, 14, 16, 18, 24]
 
 
-    def __init__(self):
+    def __init__(self, debug=False):
+
         self.fonts = {
             size: ImageFont.truetype(self.font_file, size)
             for size in self.font_sizes
         }
 
-        self.interface = EPD()
-        self.interface.init()
-        self.interface.Clear(0xFF)
+        if not debug:
+            self.interface = EPD()
+            self.interface.init()
+            self.interface.Clear(0xFF)
 
 
     def show_image(self, img_name):
@@ -31,4 +33,8 @@ class EPaper:
         drawblack.text(location, text[:30], font=self.fonts[size], fill=0)
 
         self.interface.display(self.interface.getbuffer(HBlackimage), self.interface.getbuffer(HRedimage))
+        self.interface.sleep()
+
+    def clear(self):
+        self.interface.Clear(0xFF)
         self.interface.sleep()
