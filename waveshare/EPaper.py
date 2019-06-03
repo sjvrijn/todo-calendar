@@ -30,6 +30,7 @@ class EPaper:
             self.interface = EPD()
             self.interface.init()
             self.interface.Clear(0xFF)
+        self.asleep = False
 
 
     def show_image(self, img_name):
@@ -37,6 +38,9 @@ class EPaper:
 
 
     def show_text(self, text, location=(0,0), size=18):
+        if self.asleep:
+            self.interface.init()
+            self.asleep = False
         HBlackimage = Image.new('1', (EPD_HEIGHT, EPD_WIDTH), 255)  # 264*176
         HRedimage = Image.new('1', (EPD_HEIGHT, EPD_WIDTH), 255)  # 264*176
         drawblack = ImageDraw.Draw(HBlackimage)
@@ -53,7 +57,9 @@ class EPaper:
 
         self.interface.display(self.interface.getbuffer(HBlackimage), self.interface.getbuffer(HRedimage))
         self.interface.sleep()
+        self.asleep = True
 
     def clear(self):
         self.interface.Clear(0xFF)
         self.interface.sleep()
+        self.asleep = True
