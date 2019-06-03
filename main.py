@@ -2,6 +2,7 @@ import pickle
 import os.path
 import requests
 import todoist
+import time
 from datetime import datetime, timedelta
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -86,10 +87,12 @@ def getfirsttask(filter_name):
 if __name__ == '__main__':
     # getcurrentevent('Day-planning')
 
-    task = getfirsttask(filter_name='Desk-Widget')
-    print(task)
-    print()
-    print(task['content'])
+    while True:
+        task = getfirsttask(filter_name='Desk-Widget')
+        print(task)
+        print()
+        print(task['content'])
 
-    ep = EPaper()
-    ep.show_text(task['content'])
+        ep = EPaper()
+        ep.show_text(task['content'])
+        time.sleep(600)
