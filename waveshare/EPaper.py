@@ -1,5 +1,6 @@
 from waveshare.epd2in7b import EPD, EPD_HEIGHT, EPD_WIDTH
 from PIL import Image, ImageDraw, ImageFont
+import textwrap
 
 
 class EPaper:
@@ -30,7 +31,12 @@ class EPaper:
         HRedimage = Image.new('1', (EPD_HEIGHT, EPD_WIDTH), 255)  # 264*176
         drawblack = ImageDraw.Draw(HBlackimage)
 
-        drawblack.text(location, text[:30], font=self.fonts[size], fill=0)
+        wrapped_text = textwrap.wrap(text, width=30)
+        x, y = location
+
+        for i, line in enumerate(wrapped_text):
+            line_y = y + (size + 2)*i
+            drawblack.text((x, line_y), line, font=self.fonts[size], fill=0)
 
         self.interface.display(self.interface.getbuffer(HBlackimage), self.interface.getbuffer(HRedimage))
         self.interface.sleep()
