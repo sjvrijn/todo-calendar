@@ -187,19 +187,19 @@ class EPD:
         
     def set_lut(self):
         self.send_command(LUT_FOR_VCOM)               # vcom
-        for count in range(0, 44):
+        for count in range(44):
             self.send_data(self.lut_vcom_dc[count])
         self.send_command(LUT_WHITE_TO_WHITE)         # ww --
-        for count in range(0, 42):
+        for count in range(42):
             self.send_data(self.lut_ww[count])
         self.send_command(LUT_BLACK_TO_WHITE)         # bw r
-        for count in range(0, 42):
+        for count in range(42):
             self.send_data(self.lut_bw[count])
         self.send_command(LUT_WHITE_TO_BLACK)         # wb w
         for count in range(0, 42):
             self.send_data(self.lut_bb[count])
         self.send_command(LUT_BLACK_TO_BLACK)         # bb b
-        for count in range(0, 42):
+        for count in range(42):
             self.send_data(self.lut_wb[count])
             
     def init(self):
@@ -273,49 +273,49 @@ class EPD:
         imwidth, imheight = image_monocolor.size
         pixels = image_monocolor.load()
         # print "imwidth = %d, imheight = %d",imwidth,imheight
-        if(imwidth == self.width and imheight == self.height):
+        if (imwidth == self.width and imheight == self.height):
             print("Vertical")
             for y in range(imheight):
                 for x in range(imwidth):
                     # Set the bits for the column of pixels at the current position.
                     if pixels[x, y] == 0:
                         buf[(x + y * self.width) // 8] &= ~(0x80 >> (x % 8))
-        elif(imwidth == self.height and imheight == self.width):
+        elif (imwidth == self.height and imheight == self.width):
             print("Horizontal")
             for y in range(imheight):
+                newx = y
                 for x in range(imwidth):
-                    newx = y
                     newy = self.height - x - 1
-                    if pixels[x, y] == 0:
-                        buf[(newx + newy*self.width) // 8] &= ~(0x80 >> (y % 8))
+                    if pixels[x, newx] == 0:
+                        buf[(newx + newy * self.width) // 8] &= ~128 >> y % 8
         return buf
 
     def display(self, imageblack, imagered):
         self.send_command(DATA_START_TRANSMISSION_1)
-        for i in range(0, self.width * self.height // 8):
+        for i in range(self.width * self.height // 8):
             self.send_data(~imageblack[i])
         self.send_command(DATA_STOP)
-        
+
         self.send_command(DATA_START_TRANSMISSION_2)
-        for i in range(0, self.width * self.height // 8):
+        for i in range(self.width * self.height // 8):
             self.send_data(~imagered[i])
         self.send_command(DATA_STOP)
-        
-        self.send_command(DISPLAY_REFRESH) 
+
+        self.send_command(DISPLAY_REFRESH)
         self.wait_until_idle()
         
     def Clear(self, color):
         self.send_command(DATA_START_TRANSMISSION_1)
-        for i in range(0, self.width * self.height // 8):
+        for _ in range(self.width * self.height // 8):
             self.send_data(0x00)
         self.send_command(DATA_STOP) 
-        
+
         self.send_command(DATA_START_TRANSMISSION_2)
-        for i in range(0, self.width * self.height // 8):
+        for i in range(self.width * self.height // 8):
             self.send_data(0x00)
         self.send_command(DATA_STOP)
-        
-        self.send_command(DISPLAY_REFRESH) 
+
+        self.send_command(DISPLAY_REFRESH)
         self.wait_until_idle()
 
     def sleep(self):

@@ -29,7 +29,7 @@ def getcurrentevent(calendar_name):
         with open('token.pickle', 'rb') as token:
             creds = pickle.load(token)
     # If there are no (valid) credentials available, let the user log in.
-    if not creds or not creds.valid:
+    if not (creds and creds.valid):
         if not os.path.exists('credentials.json'):
             raise FileNotFoundError("'credentials.json' not found, please "
                                     "obtain some Google Calendar API "
